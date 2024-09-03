@@ -173,8 +173,10 @@
             </div>
             <div class="barra_opociones">
                     <div class="nombre_puesto">
-                        <p>pablo martinez</p> 
-                        <p>diseñador web</p>
+                         <div>
+                            <p>pablo martinez</p> 
+                            <p>diseñador web</p>
+                        </div>
                     </div>
                     <div class="contenedor_botones" >
                        <button class="boton_imagen_icono">
