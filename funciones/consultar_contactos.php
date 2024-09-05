@@ -10,25 +10,20 @@ $data = json_decode($json, true);
 // Verifica si la decodificación fue exitosa
 if (json_last_error() === JSON_ERROR_NONE) {
     // Procesa los datos
-    $email = $data['correo'] ?? 'N/A';
-    $contrasenia =$data['contrasenia'] ?? 'N/A';
     $conecta = new Config();
 
     try {
         // Preparar la consulta SQL
-        $sql = 'SELECT * FROM  usuarios WHERE email = :email AND contrasenia = :contrasenia';
+        $sql = 'SELECT * FROM  contactos ';
         $stmt = $conecta ->conexion()->prepare($sql);
-        $md5pass = md5($contrasenia);
-        // Vincular parámetros
-        $stmt->bindParam(':email',  $email);
-        $stmt->bindParam(':contrasenia', $contrasenia);
+
         // Ejecutar la consulta
         $stmt->execute();
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $response = [
             'status' => 'ok',
-            'message' => "Logeo exitoso" ,
+            'message' => "Consulta de contactos exitoza" ,
             'resultado' =>  $resultados
         ];
 

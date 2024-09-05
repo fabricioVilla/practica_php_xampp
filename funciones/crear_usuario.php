@@ -15,12 +15,12 @@ if (json_last_error() === JSON_ERROR_NONE) {
     $contrasenia =$data['contrasenia'] ?? 'N/A';
     $genero = $data['genero'] ?? 'N/A';
 
-
+    $conecta = new Config();
     try {
         // Preparar la consulta SQL
         $sql = 'INSERT INTO usuarios (usuario, email, contrasenia, genero) VALUES (:usuario, :email, :contrasenia, :genero)';
-        $stmt = $pdo->prepare($sql);
-
+        $stmt = $conecta ->conexion()->prepare($sql);
+        $md5pass = md5($contrasenia);
         // Vincular parámetros
         $stmt->bindParam(':usuario',  $usuario);
         $stmt->bindParam(':email',  $email);
@@ -31,7 +31,7 @@ if (json_last_error() === JSON_ERROR_NONE) {
         $stmt->execute();
         $response = [
             'status' => 'ok',
-            'message' => "SE inserto" 
+            'message' => "SE inserto usuario" 
         ];
 
     } catch (PDOException $e) {

@@ -10,26 +10,32 @@ $data = json_decode($json, true);
 // Verifica si la decodificación fue exitosa
 if (json_last_error() === JSON_ERROR_NONE) {
     // Procesa los datos
-    $email = $data['correo'] ?? 'N/A';
-    $contrasenia =$data['contrasenia'] ?? 'N/A';
+    $nombre = $data['nombre'] ?? 'N/A';
+    $correo = $data['correo'] ?? 'N/A';
+    $telefono =$data['telefono'] ?? 'N/A';
+    $rol = $data['rol'] ?? 'N/A';
+    $fechaUnion =$data['fechaUnion'] ?? 'N/A';
+    $salario =$data['salario'] ?? 'N/A';
     $conecta = new Config();
-
     try {
         // Preparar la consulta SQL
-        $sql = 'SELECT * FROM  usuarios WHERE email = :email AND contrasenia = :contrasenia';
+        $sql = 'INSERT INTO contactos (nombre, email, telefono, rol,fecha,salario) 
+        VALUES (:nombre, :email, :telefono, :rol, :fecha, :salario)';
         $stmt = $conecta ->conexion()->prepare($sql);
-        $md5pass = md5($contrasenia);
+        
         // Vincular parámetros
-        $stmt->bindParam(':email',  $email);
-        $stmt->bindParam(':contrasenia', $contrasenia);
+        $stmt->bindParam(':nombre',  $nombre);
+        $stmt->bindParam(':email',  $correo);
+        $stmt->bindParam(':telefono', $telefono);
+        $stmt->bindParam(':rol',  $rol );
+        $stmt->bindParam(':fecha',  $fechaUnion );
+        $stmt->bindParam(':salario',  $salario );
+
         // Ejecutar la consulta
         $stmt->execute();
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $response = [
             'status' => 'ok',
-            'message' => "Logeo exitoso" ,
-            'resultado' =>  $resultados
+            'message' => "SE inserto contacto" 
         ];
 
     } catch (PDOException $e) {

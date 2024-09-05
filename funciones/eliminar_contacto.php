@@ -10,26 +10,22 @@ $data = json_decode($json, true);
 // Verifica si la decodificación fue exitosa
 if (json_last_error() === JSON_ERROR_NONE) {
     // Procesa los datos
-    $email = $data['correo'] ?? 'N/A';
-    $contrasenia =$data['contrasenia'] ?? 'N/A';
-    $conecta = new Config();
+    $id= $data['id'] ??'N/A';
 
+    $conecta = new Config();
     try {
         // Preparar la consulta SQL
-        $sql = 'SELECT * FROM  usuarios WHERE email = :email AND contrasenia = :contrasenia';
+        $sql = 'DELETE FROM contactos WHERE id = :id  ';
         $stmt = $conecta ->conexion()->prepare($sql);
-        $md5pass = md5($contrasenia);
+        
         // Vincular parámetros
-        $stmt->bindParam(':email',  $email);
-        $stmt->bindParam(':contrasenia', $contrasenia);
+        $stmt->bindParam(':id',  $id );
+
         // Ejecutar la consulta
         $stmt->execute();
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         $response = [
             'status' => 'ok',
-            'message' => "Logeo exitoso" ,
-            'resultado' =>  $resultados
+            'message' => "SE elimino contacto" 
         ];
 
     } catch (PDOException $e) {

@@ -28,6 +28,8 @@ function login(){
             .then(response => response.json())
             .then(result => {
                 console.log('Response from PHP:', result);
+                if(result.resultado.length>0)
+                    window.location.href = 'lista_usuarios.php';
             })
     } catch (error) {
         console.log("error: ", error);
@@ -36,7 +38,19 @@ function login(){
 
 }
 
+function ventanaAgragar(){
+    window.location.href = 'agrega_usuario.php';
+}
+
 </script>
+<style>
+     .nota_crear_usuario{
+            width: 100%;
+       }
+       .nota_crear_usuario p{
+        cursor: pointer;
+       }
+</style>
 <body>
     <div class="form-container centrar_formulario">
         <img class="logo_login" src="../recursos/Copia de logo istrategy.svg" alt="">
@@ -62,7 +76,12 @@ function login(){
             </label>
 
             <input type="submit" value="Iniciar sesión" onclick="login();">
+
+            <div class="nota_crear_usuario" >
+                <p onclick="ventanaAgragar();">crear usuario de acceso</p>
+            </div>
         </form>
+        
     </div>
 </body>
 </html>

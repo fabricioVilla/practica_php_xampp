@@ -11,11 +11,112 @@
     <link rel="stylesheet" href="../css/modal.css">
 </head>
 <script>
-    function mostrarModal(){
+    function mostrarModal(accion){
+        console.log("accion: ", accion);
+        event.preventDefault();
         console.log("mostrarModal: ");
-        document.getElementById('modal').className=''
-        document.getElementById('titulo_modal').innerText='Agregar contacto'
+        document.getElementById('modal').className='';
+        document.getElementById('titulo_modal').innerText=accion==1?'Agregar contacto':'Editar contacto';
+        document.getElementById('guardar_buton').className=accion==1?'':'ocultar';
+        document.getElementById('editar_buton').className=accion==2?'':'ocultar';
+        document.getElementById('fecha_union').className=accion==2?'formulario_contacto_input':'ocultar';
+        document.getElementById('label_fecha_u').className=accion==2?'':'ocultar';
     }
+
+    function mostrarModalEditar(accion,id,nombre,email,telefono,rol,salario,fecha){
+        event.preventDefault();
+        mostrarModal(accion);
+        document.getElementById('nombre').value=nombre;
+        document.getElementById('correo').value=email;
+        document.getElementById('telefono').value=telefono;
+        document.getElementById('rol').value=rol;
+        document.getElementById('fecha_union').value=fecha;
+        document.getElementById('salario').value=salario; 
+        document.getElementById('id_fila_usuario').value=id;         
+    }
+
+    function recuperarContactos(){
+        event.preventDefault();
+            try {
+                fetch('../funciones/consultar_contactos.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Response from PHP:', result);
+                        if(result.resultado.length>0){
+                            var html = '';
+                            
+                            result.resultado.forEach(element => {
+
+                                html+=`<tr id="${element.id+element.email}">
+                                        <td>${element.id}</td>
+                                        <td>${element.nombre}</td>
+                                        <td>${element.email}</td>
+                                        <td>${element.telefono}</td>
+                                        <td>
+                                            <p class="marcador_rol">${element.rol}</p>
+                                            
+                                        </td>
+                                        <td>${element.fecha}</td>
+                                        <td>${element.salario}</td>
+                                        <td >
+                                            <div class="action-buttons">
+                                                <button class="boton_icono centrar_flex" 
+                                                onclick="mostrarModalEditar(2,${element.id},'${element.nombre}','${element.email}',${element.telefono},'${element.rol}',${element.salario},${element.fecha});">
+                                                    <img class="iconos" src="../recursos/images/icono pluma-8.png" alt="">
+                                                </button>
+                                                <button class="boton_icono centrar_flex" onclick="eliminarElemento(${element.id})">
+                                                    <img class="iconos" src="../recursos/images/icono basura-8.png" alt="">
+                                                </button>
+                                            </div>
+                                            
+                                        </td>
+                                    </tr>`
+
+                                
+                            });
+                            document.getElementById('tabla_contactos').innerHTML = html;
+                        }
+                    })
+            } catch (error) {
+                console.log("error: ", error);
+                
+            }
+    }
+
+    function eliminarElemento(id){
+        event.preventDefault();
+        try {
+            fetch('../funciones/eliminar_contacto.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({"id":id})
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('Response from PHP:', result);
+                    if(result.status=="ok"){
+                        window.location.reload(); 
+                    }
+                })
+        } catch (error) {
+            console.log("error: ", error);
+            
+        }
+
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        recuperarContactos();
+    });
 </script>
 <body>
     <div class="body_principal">
@@ -31,7 +132,7 @@
 
         <div class="header">
             <div class="header_auto">
-                <button class="btn_agregar_contacto" onclick="mostrarModal();" style="cursor:pointer;">agregar <br> nuevo contacto</button>
+                <button class="btn_agregar_contacto" onclick="mostrarModal(1);" style="cursor:pointer;">agregar <br> nuevo contacto</button>
             </div>
             <div class="header_auto">
                 <label>Mostras  <input class="elementos_mostrar" type="number" id="input2" placeholder="10"> entradas</label>
@@ -74,7 +175,7 @@
                                 <th>Acción</th>
                             </tr>
                         </thead>
-                        <tbody class="contenido_tabla">
+                        <tbody class="contenido_tabla" id="tabla_contactos">
                             <!-- Aquí se pueden agregar filas de datos de ejemplo -->
                             <tr>
                                 <td>1</td>
@@ -89,7 +190,7 @@
                                 <td>$3000</td>
                                 <td >
                                     <div class="action-buttons">
-                                        <button class="boton_icono centrar_flex">
+                                        <button class="boton_icono centrar_flex" onclick="">
                                             <img class="iconos" src="../recursos/images/icono pluma-8.png" alt="">
                                         </button>
                                         <button class="boton_icono centrar_flex">
@@ -102,6 +203,8 @@
                         
                         </tbody>
                     </table>
+                
+
                 
             </div>
         </div>
