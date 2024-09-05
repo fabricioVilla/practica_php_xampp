@@ -90,6 +90,7 @@
             border: 1px solid white;
             margin-left: 5px;
             color: white;
+            height: 20px;
         }
         .marcador_rol, .cantidad{
             padding: 3px;

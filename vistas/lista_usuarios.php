@@ -6,7 +6,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administración</title>
     <link rel="stylesheet" href="../css/lista_usuarios.css">
     <link rel="stylesheet" href="../css/modal.css">
 </head>
@@ -35,23 +34,11 @@
         document.getElementById('id_fila_usuario').value=id;         
     }
 
-    function recuperarContactos(){
-        event.preventDefault();
-            try {
-                fetch('../funciones/consultar_contactos.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({})
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log('Response from PHP:', result);
-                        if(result.resultado.length>0){
+    function crearTabla(resultado){
+        if(resultado.length>0){
                             var html = '';
                             
-                            result.resultado.forEach(element => {
+                            resultado.forEach(element => {
 
                                 html+=`<tr id="${element.id+element.email}">
                                         <td>${element.id}</td>
@@ -82,6 +69,21 @@
                             });
                             document.getElementById('tabla_contactos').innerHTML = html;
                         }
+    }
+    function recuperarContactos(){
+        event.preventDefault();
+            try {
+                fetch('../funciones/consultar_contactos.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('Response from PHP:', result);
+                       crearTabla(result.resultado);
                     })
             } catch (error) {
                 console.log("error: ", error);
@@ -113,6 +115,29 @@
 
     }
 
+    function buscar(valor){
+        //console.log("::::::::::::::::::::::",valor);
+        event.preventDefault();
+        try {
+            fetch('../funciones/buscar_contacto.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({"correo_tel":valor})
+                })
+                .then(response => response.json())
+                .then(result => {
+                    //console.log('Response from PHP:', result);
+                    if(result.status=="ok"){
+                        crearTabla(result.resultado);
+                    }
+                })
+        } catch (error) {
+            console.log("error: ", error);
+            
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', function() {
         recuperarContactos();
@@ -141,7 +166,8 @@
                 <img class="logo" src="../recursos/logo istrategy.svg" alt="">
             </div>
             <div class="header_auto centrar_flex">
-                <label for="">Buscardor: </label>   <input class="buscador" type="text">
+                <label for="">Buscardor: </label>   
+                <input class="buscador" type="text" placeholder="tel o correo" onkeyup="buscar(this.value)">
             </div>
         </div>
         <div class="contendor1">
