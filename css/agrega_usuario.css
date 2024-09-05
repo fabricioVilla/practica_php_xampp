@@ -1,5 +1,9 @@
-
+@font-face {
+            font-family: 'FuenteMundial';
+            src: url('../recursos/Mundial_Fonts/Fontspring-DEMO-1-mundial-hair-tty.otf') format('woff2')
+          }
 body{
+    font-family: 'FuenteMundial';
     margin: 0;
     padding: 0;
 }
