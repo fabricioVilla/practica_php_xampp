@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     
+
+    </head>
+
+    <script src="./login_controler.js"></script>
+    <script src="./generales.js"></script>
+    <body>
+        <form action="">
+            <label for="">usuario</label> <br>
+            <input type="text" id="login_telefono" oninput="validaUsuairo(value)" placeholder="nombte de usuario o telefono"> 
+            <br>
+            <label id="login_telefono_mensaje"></label> 
+            <br>
+            <input type="password" id="login_contrasenia" oninput=" validaContrsenia(value)" placeholder="contraseña"> <br>
+            <label id="login_contrasenia_mensaje"></label> 
+            <br>
+            <input type="checkbox" id="login_sesion_recordar" > <br>
+            <label for="">matener sesion activa?</label> <br>
+
+            <input type="submit" id="login_boton_aceptar" value="iniciar" onclick="iniciar()" disabled> <br>
+            <input type="submit" id="login_boton_cancelar" value="cancelar" > <br>
+        </form>
+      
+    </body>
+</html>
